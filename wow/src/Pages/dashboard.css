@@ -1,0 +1,28 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    border: 1px solid grey;
+    background-color: #292D32;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  
+  .pagination > span{
+    color: white;
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  
+  #firstpointer:hover{
+    background-color: #7A71DB;
+    border-radius: 50%;
+  }
+  .firstpointer:hover{
+    background-color: #7A71DB;
+    border-radius: 50%;
+  }
+  #lastpointer{
+    color: #7A71DB;
+    font-size: 25px;
+  }
+  
