@@ -1,7 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { getEntryData } from "../Redux/action";
+
 import moment from "moment";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
@@ -43,7 +42,6 @@ import { useState } from "react";
 
 function Dashboard() {
   const [entrys, setEntrys] = useState([]);
-  const [allEntrys, setAllEntrys] = useState([]);
   const [page, setPage] = useState(1);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -54,15 +52,13 @@ function Dashboard() {
     );
     const data = await res.json();
     // console.log(data)
-    // setEntrys(data.data.data.map((el)=>{
-    //   return {...el, id: uuidv4()}
-    // }));
-    setEntrys(data.data.data);
-    setAllEntrys(data.data.data);
+    setEntrys(data.data.data.map((el)=>{
+      return {...el, id: uuidv4()}
+    }));
+    // setEntrys(data.data.data);
+    // setAllEntrys(data.data.data);
   };
-  useEffect(() => {
-    fetchProduct();
-  }, []);
+
   // console.log(entrys);
 
   const selectHandler = (selectedPage) => {
@@ -76,7 +72,7 @@ function Dashboard() {
   };
 
   const handleSelect = (date) => {
-    let filtered = allEntrys.filter((ent) => {
+    let filtered = entrys.filter((ent) => {
       let entryDate = new Date(ent["created_At"]);
       return (
         entryDate >= date.selection.startDate &&
@@ -93,6 +89,11 @@ function Dashboard() {
     endDate: endDate,
     key: "selection",
   };
+
+
+  useEffect(() => {
+    fetchProduct();
+  }, []);
 
   return (
     <div>
@@ -221,43 +222,62 @@ function Dashboard() {
         </Box>
       </>
       {/* Selectt Date Duration  */}
-      <Flex
-      margin='auto'
-      justifyContent='space-between'
-      >
-        <Select placeholder='Select option' size='xs' width='10vw' color='white' >
-          <option value='option1'>Option 1</option>
-          <option value='option2'>Option 2</option>
-          <option value='option3'>Option 3</option>
+      <Flex margin="auto" justifyContent="space-between">
+        <Select
+          placeholder="Select option"
+          size="xs"
+          width="10vw"
+          color={"white"}
+        >
+          <option value="10" color="black">
+            10
+          </option>
+          <option value="20" color="black">
+            20
+          </option>
+          <option value="50" color="black">
+            50
+          </option>
         </Select>
-       <Stack marginRight={'10'}  border='1px solid white' width={'15vw'} textAlign="start">
-       <Popover isLazy size='xs' placement='left-start'  >
-         <PopoverTrigger>
-         <Box
-      tabIndex='0'
-      role='button'
-      aria-label='Some box'
-      // bg='gray.300'
-      color={'gray.300'}
-      children='Select Duration'
-    />
-         </PopoverTrigger>
-         <PopoverContent
-          bg='#283046' 
-         >
-           <PopoverHeader bg={"#161C32"} color="white"  borderColor='blue.800'>Select Duration</PopoverHeader>
-           <PopoverArrow />
-           <PopoverCloseButton bg={'#283046'} />
-           <PopoverBody>
-           <DateRangePicker ranges={[selectionRange]} onChange={handleSelect} />
-           </PopoverBody>
-         </PopoverContent>
-        </Popover>
-       </Stack>
+        <Stack
+          marginRight={"10"}
+          border="1px solid white"
+          width={"15vw"}
+          textAlign="start"
+        >
+          <Popover isLazy size="xs" placement="left-start">
+            <PopoverTrigger>
+              <Box
+                tabIndex="0"
+                role="button"
+                aria-label="Some box"
+                // bg='gray.300'
+                color={"gray.300"}
+                children="Select Duration"
+              />
+            </PopoverTrigger>
+            <PopoverContent bg="#283046">
+              <PopoverHeader
+                bg={"#161C32"}
+                color="white"
+                borderColor="blue.800"
+              >
+                Select Duration
+              </PopoverHeader>
+              <PopoverArrow />
+              <PopoverCloseButton bg={"#283046"} />
+              <PopoverBody>
+                <DateRangePicker
+                  ranges={[selectionRange]}
+                  onChange={handleSelect}
+                />
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
+        </Stack>
       </Flex>
 
       {/* Table for Data fetching */}
-
 
       <TableContainer color="white" backgroundColor="rgb(40,48,70)">
         <Table variant="simple" size="sm">
@@ -278,7 +298,7 @@ function Dashboard() {
               {entrys.slice(page * 10 - 10, page * 10).map((item, i) => {
                 return (
                   <Tbody>
-                    <Tr>
+                    <Tr key={item.id}>
                       <Td>{moment.utc(item.created_At).format("LL")}</Td>
                       <Td>{item.totalinstall}</Td>
                       <Td>
